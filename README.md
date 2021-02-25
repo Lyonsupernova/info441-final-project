@@ -15,8 +15,9 @@ There is no better way to keep an eye on popular products by using our applicati
 As a group of avid developers and gamers, there is no better project idea than building something that we all thrill about--a server that notifies the availability of in-demand gaming products. We were excited to undertake engineering challenges such as implementing SMS & email notification features, monitoring merchant web-page constantly, and optimizing speed for stock notification. Moreover, we envision to adapt our application so users can subscribe to products from any merchants. 
 
 ## Architecture Diagram
-![GitHub Logo](/img/architecture.png)
-## Endpoint
+![architecture](/img/architecture.png)
+
+## User story
 Priority|User|Description|Technical requirements
 :----:|:----:|:-----------:| :----------: 
 P0|As a user|I want to receive notification as soon as possible once a PS5 is in stock at mainstream platforms.|We all constantly analyze the html elements (or other tokens) of each platform. Once the backend finds there is a restock on any platform, it will retrieve all the registered users information from the database, and send SNS messages or email to users based on their choices.
@@ -24,6 +25,23 @@ P1|As a user| want to make sure that all the information stored in the databases
 P0|As a user|I want to be able to set my current status of catching restocks to “active” and “inactive”. And I also want to set up the websites that I want to buy from. |For each user we will set up a personal profile in the database where it stores all the prefered websites and other information to indicate the status. The backend will check the databases each time it catches a restock on any website, and only send to the active users who want to buy from this website.
 P0|As a user|I want the platform to provide some methods to accelerate my payment speed.|We can directly retrieve the payment page url to the users instead of the product front page.
 
+## Endpoint
 
+#### get
+![get](/img/get_subscribe.png)
+![get](/img/get_user_login.png)
 
+#### delete
+![delete](/img/delete_session.png)
+![delete](/img/delete_subscribe.png)
+
+#### patch
+![patch](/img/patch_subscribe.png)
+
+#### post
+![post](/img/post_subscribe.png)
+![post](/img/post_sessions.png)
+![post](/img/post_user.png)
+![post](/img/post_user_login.png)
 ## Database Schema
+![dbschema](/img/db_schema.png)
