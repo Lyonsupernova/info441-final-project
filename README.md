@@ -16,22 +16,15 @@ As a group of avid developers and gamers, there is no better project idea than b
 
 ## Architecture Diagram
 ![architecture](/img/architecture "architecture_diagram")
+
 ## Endpoint
-|   Priority    |   User    |   Description  |
-|---------------|-----------|----------------|
-| P0 |     As a user      |I want to receive notification as soon as possible once a PS5 is in stock at mainstream platforms. 
+Priority|User|Description|Technical requirements
+--------|----|-----------|---------------------:
+P0|As a user|I want to receive notification as soon as possible once a PS5 is in stock at mainstream platforms.|We all constantly analyze the html elements (or other tokens) of each platform. Once the backend finds there is a restock on any platform, it will retrieve all the registered users information from the database, and send SNS messages or email to users based on their choices.
+P1|As a user| want to make sure that all the information stored in the databases will not be leaked to ensure my privacy.|All the passwords will be hashed with random generated salts to prevent brute force attacks. Plus, all the incoming posts that require interactions between databases will be evaluated to prevent SQL injection.
+P0|As a user|I want to be able to set my current status of catching restocks to “active” and “inactive”. And I also want to set up the websites that I want to buy from. |For each user we will set up a personal profile in the database where it stores all the prefered websites and other information to indicate the status. The backend will check the databases each time it catches a restock on any website, and only send to the active users who want to buy from this website.
+P0|As a user|I want the platform to provide some methods to accelerate my payment speed.|We can directly retrieve the payment page url to the users instead of the product front page.
 
-**Technical approach**
-We all constantly analyze the html elements (or other tokens) of each platform. Once the backend finds there is a restock on any platform, it will retrieve all the registered users information from the database, and send SNS messages or email to users based on their choices. 
- |
-| P1  |      As a user     |I want to make sure that all the information stored in the databases will not be leaked to ensure my privacy.
 
-**Technical approach**
-All the passwords will be hashed with random generated salts to prevent brute force attacks. Plus, all the incoming posts that require interactions between databases will be evaluated to prevent SQL injection.
-|
-| P2 |     As a user      |I want to be able to set my current status of catching restocks to “active” and “inactive”. And I also want to set up the websites that I want to buy from. 
 
-**Technical approach**
-For each user we will set up a personal profile in the database where it stores all the prefered websites and other information to indicate the status. The backend will check the databases each time it catches a restock on any website, and only send to the active users who want to buy from this website.
-|
 ## Database Schema
