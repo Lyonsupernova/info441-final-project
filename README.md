@@ -15,7 +15,7 @@ There is no better way to keep an eye on popular products by using our applicati
 As a group of avid developers and gamers, there is no better project idea than building something that we all thrill about--a server that notifies the availability of in-demand gaming products. We were excited to undertake engineering challenges such as implementing SMS & email notification features, monitoring merchant web-page constantly, and optimizing speed for stock notification. Moreover, we envision to adapt our application so users can subscribe to products from any merchants. 
 
 ## Architecture Diagram
-![architecture](/img/architecture.png)
+![architecture](/img/arch.png)
 
 ## User story
 Priority|User|Description|Technical requirements
