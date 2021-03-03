@@ -44,4 +44,4 @@ P0|As a user|I want the platform to provide some methods to accelerate my paymen
 ![post](/img/post_user.png)
 ![post](/img/post_user_login.png)
 ## Database Schema
-![dbschema](/img/db_schema.png)
+![dbschema](/img/db_schema_updated.png)
