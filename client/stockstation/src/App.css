@@ -1,0 +1,27 @@
+#html {
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+#auth-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+Footer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 4em;
+}
