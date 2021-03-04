@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"assignments-fixed-Lyonsupernova/servers/gateway/models/users"
+	"info441-final-project/server/gateway/models/users"
 	"time"
 )
 

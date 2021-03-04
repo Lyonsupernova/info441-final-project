@@ -1,11 +1,10 @@
 package handlers
 
 import (
-	"assignments-fixed-Lyonsupernova/servers/gateway/models/users"
-	"assignments-fixed-Lyonsupernova/servers/gateway/sessions"
+	"info441-final-project/server/gateway/models/users"
+	"info441-final-project/server/gateway/sessions"
 )
 
-//TODO: define a handler context struct that
 //will be a receiver on any of your HTTP
 //handler functions that need access to
 //globals, such as the key used for signing

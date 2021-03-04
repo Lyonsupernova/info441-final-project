@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"assignments-fixed-Lyonsupernova/servers/gateway/models/users"
-	"assignments-fixed-Lyonsupernova/servers/gateway/sessions"
 	"encoding/json"
+	"info441-final-project/server/gateway/models/users"
+	"info441-final-project/server/gateway/sessions"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -14,6 +14,7 @@ import (
 )
 
 // UsersHandler handles the request
+//TODO: might cause error because the change of struct of user!!!
 func (ch *ContextHandler) UsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "The request method is not legal", http.StatusMethodNotAllowed)
@@ -47,7 +48,7 @@ func (ch *ContextHandler) UsersHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
-
+	//TODO: might cause error?
 	insertUsr, err := ch.UserStore.Insert(usr)
 	if err != nil {
 		log.Printf("User database insert error %s", err)
@@ -91,15 +92,6 @@ func (ch *ContextHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 		http.Error(w, "current sessionID is not valid", http.StatusUnauthorized)
 		return
 	}
-
-	/*
-		sessionState := &SessionState{}
-		_, err = sessions.GetState(r, ch.SessionID, ch.SessionStore, sessionState)
-		if err != nil {
-			http.Error(w, "current session state is not valid", http.StatusUnauthorized)
-			return
-		}
-	*/
 
 	base := filepath.Base(r.URL.Path)
 	if r.Method == http.MethodGet {
