@@ -3,7 +3,6 @@ import PageTypes from '../../Constants/PageTypes/PageTypes';
 import MainPageContent from './Content/MainPageContent/MainPageContent';
 import SignOutButton from './Components/SignOutButton/SignOutButton';
 import UpdateName from './Components/UpdateName/UpdateName';
-import UpdateAvatar from './Components/UpdateAvatar/UpdateAvatar';
 
 const Main = ({ page, setPage, setAuthToken, setUser, user }) => {
     let content = <></>
@@ -14,9 +13,6 @@ const Main = ({ page, setPage, setAuthToken, setUser, user }) => {
             break;
         case PageTypes.signedInUpdateName:
             content = <UpdateName user={user} setUser={setUser} />;
-            break;
-        case PageTypes.signedInUpdateAvatar:
-            content = <UpdateAvatar user={user} setUser={setUser} />;
             break;
         default:
             content = <>Error, invalid path reached</>;
