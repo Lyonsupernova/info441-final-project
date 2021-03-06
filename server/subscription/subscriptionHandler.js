@@ -8,6 +8,12 @@
 
 //TODO: get product, a list of product
 
+var mongoose = require('mongoose'); 
+
+var Schema = mongoose.Schema; 
+
+var ObjectId = Schema.ObjectId; 
+
 
 // product
 // get v1/product
@@ -60,20 +66,23 @@ subscriptionPostHandler = async(req, res, {Subscription, Product}) => {
         return;
     }
     // find product ID
-    const product = await Product.find({"productID": productID});
+    const product = await Product.findOne({"productID": productID});
     if (!product) {
         res.status(400).send("no product named " + productName + " stored in the db");
         return;
     }
-    // created time 
+    const previousSubscription = await Subscription.findOne({"productID": productID, "userID": user['id']});
+    if (previousSubscription) {
+        res.status(400).send("The subscription has already existed" + previousSubscription);
+        return;
+    }
+    // created time
     const createdAt = new Date();
-
     const subscription = {
         "userID": user['id'],
         "productID": productID,
-        "productName": product['productName'],
+        "productName": product.productName,
         "email": user['email'],
-        "subscribePref": subscribePref,
         "createdAt": createdAt,
         "productLink": product['productLink']
     };
