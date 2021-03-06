@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const express = require('express')
-const {channelSchema, messageSchema} = require('./schemas')
+const {productSchema, subscribeSchema} = require('./schemas')
 const Product = mongoose.model("Product", productSchema)
 const Subscription = mongoose.model("Subscribe", subscribeSchema)
 // const port = 4000
@@ -25,9 +25,11 @@ const {
 } = require('./subscriptionHandler')
 
 
-const {specificSubscriptionPatchHandler,
-    specficSubscriptionDeleteHandler} = require('./specificSubscriptionHandler');
-    
+const {specficSubscriptionDeleteHandler} = require('./specificSubscriptionHandler');
+
+const {productGetHandler} = require('./productHandler');
+
+
 const RequestWrapper = (handler, SchemeAndDBForwarder) => {
     return (req, res) => {
         handler(req, res, SchemeAndDBForwarder);
@@ -36,5 +38,5 @@ const RequestWrapper = (handler, SchemeAndDBForwarder) => {
 
 app.get("/v1/subscribe", RequestWrapper(subscriptionGetHandler, { Subscription }))
 app.post("/v1/subscribe", RequestWrapper(subscriptionPostHandler, { Subscription, Product }))
-app.patch("/v1/subscribe/:subscriptionID", RequestWrapper(specificSubscriptionPatchHandler, { Subscription }))
 app.delete("/v1/subscribe/:subscriptionID", RequestWrapper(specficSubscriptionDeleteHandler, { Subscription }))
+app.get("/v1/product", RequestWrapper(productGetHandler, { Product }))

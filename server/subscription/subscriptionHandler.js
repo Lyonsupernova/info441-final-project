@@ -4,6 +4,16 @@
 
 // TODO: x-user included???
 // TODO: if included, the format?? :: id ? username ? phone ? email ?
+
+
+//TODO: get product, a list of product
+
+
+// product
+// get v1/product
+// subscription
+// get v1/subscription
+// return a list of subscriptions
 subscriptionGetHandler = async(req, res, {Subscription}) => {
     if (!req.get('X-User')) {
         res.status(401).send("unauthorized user (debugging: x-user:" + req.get('X-User'));
@@ -11,9 +21,9 @@ subscriptionGetHandler = async(req, res, {Subscription}) => {
     }
     // parse x-user to get user id
     const user = JSON.parse(req.get('X-User'));
-    if (!user || !user['username'] || !user['id']) {
+    if (!user) {
         res.status(401).send("no user found, (debugging: user: " +
-        user + " username: " + user['username'] + " id: " + user['id']);
+        user + " username: " + user['username'] + " id: " + user['id'] + user['email']);
         return;
     }
     try {
@@ -37,18 +47,20 @@ subscriptionPostHandler = async(req, res, {Subscription, Product}) => {
     }
     // parse x-user to get user id
     const user = JSON.parse(req.get('X-User'));
-    // TODO: x-user provided with email and phone number????
-    if (!user || !user['username'] || !user['id'] || !user['phone'] || !user['email']) {
+    if (!user) {
         res.status(401).send("no user found");
         return;
     }
-    const {productName, subscribePref} = req.body;
-    if (!productName) {
+    // input: ps4
+    // mongodb (id:1, ps4, productlink: www.ps4.com)
+    // productid
+    const {productID} = req.body;
+    if (!productID) {
         res.status(400).send("no productname found");
         return;
     }
     // find product ID
-    const product = await Product.find({"productName": productName});
+    const product = await Product.find({"productID": productID});
     if (!product) {
         res.status(400).send("no product named " + productName + " stored in the db");
         return;
@@ -56,22 +68,20 @@ subscriptionPostHandler = async(req, res, {Subscription, Product}) => {
     // created time 
     const createdAt = new Date();
 
-    // TODO: if not connected with MySQL, how to fetch the user data? MYSQL connection needed?
-    // TODO: created an array of products instead???
     const subscription = {
         "userID": user['id'],
-        "productID": product['productID'],
-        "productName": productName,
+        "productID": productID,
+        "productName": product['productName'],
         "email": user['email'],
-        "phone": user['phone'],
         "subscribePref": subscribePref,
-        "createdAt": createdAt
+        "createdAt": createdAt,
+        "productLink": product['productLink']
     };
     // status code send with json created object
     const query = new Subscription(subscription);
     query.save((err, newSubscription) => {
         if (err) {
-            res.status(400).send('unable to create a new channel' + err);
+            res.status(400).send('unable to create a new subscription' + err);
             return;
         }
         res.setHeader('Content-Type', "application/json");
