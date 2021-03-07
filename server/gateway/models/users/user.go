@@ -23,7 +23,6 @@ type User struct {
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
 	PassHash  []byte `json:"-"` //never JSON encoded/decoded
-	Phone     string `json:"phone"`
 }
 
 //Credentials represents user sign-in credentials
@@ -40,7 +39,6 @@ type NewUser struct {
 	UserName     string `json:"userName"`
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`
-	Phone        string `json:"phone"`
 }
 
 //Updates represents allowed updates to a user profile
@@ -85,7 +83,6 @@ func (nu *NewUser) ToUser() (*User, error) {
 		UserName:  nu.UserName,
 		FirstName: nu.FirstName,
 		LastName:  nu.LastName,
-		Phone:     nu.Phone,
 	}
 
 	passwordHashErr := newUser.SetPassword(nu.Password)

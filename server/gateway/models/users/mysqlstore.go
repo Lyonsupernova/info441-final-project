@@ -54,8 +54,7 @@ func (ms *MySQLStore) getByProvidedType(t GetByType, arg interface{}) (*User, er
 		&user.FirstName,
 		&user.LastName,
 		&user.Email,
-		&user.PassHash,
-		&user.Phone); err != nil {
+		&user.PassHash); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -81,7 +80,7 @@ func (ms *MySQLStore) GetByUserName(username string) (*User, error) {
 func (ms *MySQLStore) Insert(user *User) (*User, error) {
 	ins := "insert into Users(UserName, FirstName, LastName, Email, PassHash, Phone) values (?,?,?,?,?,?)"
 	res, err := ms.Database.Exec(ins, user.UserName, user.FirstName, user.LastName,
-		user.Email, user.PassHash, user.Phone)
+		user.Email, user.PassHash)
 	if err != nil {
 		return nil, err
 	}

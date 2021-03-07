@@ -99,7 +99,7 @@ func (ch *ContextHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 		var usr *users.User
 		var err error
 		if base == "me" {
-			usr, err = ch.UserStore.GetByID(sessionState.User.ID)
+			usr, err = ch.UserStore.GetByID(sessionState.User.UserID)
 		} else {
 			userID, err2 := strconv.ParseInt(base, 10, 64)
 			if err2 != nil {
@@ -150,7 +150,7 @@ func (ch *ContextHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 			http.Error(w, "Bad request", http.StatusBadRequest)
 			return
 		}
-		updateUsr, err := ch.UserStore.Update(sessionState.User.ID, newUsr)
+		updateUsr, err := ch.UserStore.Update(sessionState.User.UserID, newUsr)
 		if err != nil {
 			log.Printf("updated failed")
 			http.Error(w, "updated error found", http.StatusBadRequest)
