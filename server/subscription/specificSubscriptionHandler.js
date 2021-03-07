@@ -67,12 +67,16 @@ specficSubscriptionDeleteHandler = async function(req, res, {Subscription}) {
     // }
     // delete the channel and all messages related to it.
     // Respond with a plain text message indicating that the delete was successful.
-    Subscription.findOneAndDelete({'id' : subscriptionID}, function(err, data) {
+    Subscription.findOneAndDelete({'subscribeID' : subscriptionID}, function(err, data) {
         if (err) {
-            res.status(400).send("channel not find");
+            res.status(400).send("subscription delete error");
             return;
         }
-        res.status(200).send("Deleted channel sucessfully: " + data);
+        if (!data) {
+            res.status(400).send("subscription not found");
+            return;
+        }
+        res.status(200).send("Deleted subscription sucessfully: " + data);
     });
 };
 

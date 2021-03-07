@@ -1,23 +1,22 @@
 {
-    "name": "subscription",
-    "version": "1.0.0",
-    "description": "This directory contains the source code for your subscription microservice",
-    "main": "index.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "nodemon index.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-      "express": "^4.17.1",
-      "mongoose": "^5.9.14",
-      "mysql": "^2.18.1",
-      "start": "^5.1.0"
-    },
-    "devDependencies": {
-      "nodemon": "^1.19.4"
-    }
+  "name": "subscription",
+  "version": "1.0.0",
+  "description": "This directory contains the source code for your subscription microservice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.14",
+    "mysql": "^2.18.1",
+    "start": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
   }
-  
+}

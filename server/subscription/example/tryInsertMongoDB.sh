@@ -3,3 +3,12 @@ db.product.insertOne({"productName": "Apple - AirPods Pro - White", "productLink
 db.product.insertOne({"productName": "MacBook Air", "productLink": "https://www.bestbuy.com/site/macbook-air-13-3-laptop-apple-m1-chip-8gb-memory-256gb-ssd-latest-model-gold/6418599.p?skuId=6418599"})
 db.product.insertOne({"productName": "DJI FPV Drone Combo", "productLink": "https://www.bestbuy.com/site/dji-fpv-drone-combo-with-remote-controller-and-goggles/6442031.p?skuId=6442031"})
 db.product.insertOne({"productName": "Apple - iPhone SE", "productLink": "https://www.bestbuy.com/site/apple-iphone-se-2nd-generation-64gb-unlocked-white/6389070.p?skuId=6389070"})
+
+
+docker rm -f info441MongoDB
+
+docker run -d \
+    -p 27017:27017 \
+    --name info441MongoDB \
+    --network info441 \
+    mongo
