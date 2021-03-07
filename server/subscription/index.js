@@ -3,11 +3,11 @@ const express = require('express')
 const {productSchema, subscribeSchema} = require('./schemas')
 const Product = mongoose.model("Product", productSchema)
 const Subscription = mongoose.model("Subscribe", subscribeSchema)
-const port = 4000
+// const port = 4000
 // const mongoPort = process.env.MONGOPORT;
-const mongoEndPoint = "mongodb://localhost:27017/test"
-// const mongoEndPoint = process.env.MONGOADDR
-// const port = process.env.PORT;
+// const mongoEndPoint = "mongodb://localhost:27017/test"
+const mongoEndPoint = process.env.MONGOADDR
+const port = process.env.PORT;
 const app = express();
 app.use(express.json());
 

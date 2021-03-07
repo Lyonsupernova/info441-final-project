@@ -5,7 +5,10 @@ db.product.insertOne({"productName": "DJI FPV Drone Combo", "productLink": "http
 db.product.insertOne({"productName": "Apple - iPhone SE", "productLink": "https://www.bestbuy.com/site/apple-iphone-se-2nd-generation-64gb-unlocked-white/6389070.p?skuId=6389070"})
 
 
+docker rm -f info441MongoDB
+
 docker run -d \
     -p 27017:27017 \
     --name info441MongoDB \
+    --network info441 \
     mongo
