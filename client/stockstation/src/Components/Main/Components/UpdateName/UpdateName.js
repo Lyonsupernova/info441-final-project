@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import api from '../../../../Constants/APIEndpoints/APIEndpoints';
 import Errors from '../../../Errors/Errors';
+import Button from '@material-ui/core/Button';
+import Popup from 'reactjs-popup';
 
 class UpdateName extends Component {
     constructor(props) {
@@ -8,14 +10,15 @@ class UpdateName extends Component {
         this.state = {
             firstName: '',
             lastName: '',
+            email: '',
             error: ''
         }
     }
 
     sendRequest = async (e) => {
         e.preventDefault();
-        const { firstName, lastName } = this.state;
-        const sendData = { firstName, lastName };
+        const { firstName, lastName, email } = this.state;
+        const sendData = { firstName, lastName, email };
         const response = await fetch(api.base + api.handlers.myuser, {
             method: "PATCH",
             body: JSON.stringify(sendData),
@@ -44,21 +47,37 @@ class UpdateName extends Component {
     }
 
     render() {
-        const { firstName, lastName, error } = this.state;
+        const { firstName, lastName, email, error } = this.state;
         return <>
             <Errors error={error} setError={this.setError} />
-            <div>Enter a new name</div>
-            <form onSubmit={this.sendRequest}>
-                <div>
-                    <span>First name: </span>
-                    <input name={"firstName"} value={firstName} onChange={this.setValue} />
-                </div>
-                <div>
-                    <span>Last name: </span>
-                    <input name={"lastName"} value={lastName} onChange={this.setValue} />
-                </div>
-                <input type="submit" value="Change name" />
-            </form>
+
+            <Popup 
+                trigger={<Button variant="outlined" color="primary">Update User Info</Button>} 
+                position="right center" modal nested>
+
+                {close => (
+                  <div className="modal">
+                    <div>Enter a new name</div>
+                    <form onSubmit={this.sendRequest}>
+                        <div>
+                            <span>First name: </span>
+                            <input name={"firstName"} value={firstName} onChange={this.setValue} />
+                        </div>
+                        <div>
+                            <span>Last name: </span>
+                            <input name={"lastName"} value={lastName} onChange={this.setValue} />
+                        </div>
+                        <div>
+                            <span>Email: </span>
+                            <input name={"email"} value={email} onChange={this.setValue} />
+                        </div>
+                        <Button size="small" type="submit"> Submit</Button>
+                
+                        <Button size="small" type="submit" onClick={() => {close()}}>Cancel</Button>
+                    </form>
+                  </div>
+                )}
+             </Popup>
         </>
     }
 

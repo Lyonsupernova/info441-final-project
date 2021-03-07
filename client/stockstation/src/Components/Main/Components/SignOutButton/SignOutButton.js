@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import api from '../../../../Constants/APIEndpoints/APIEndpoints';
 import Errors from '../../../Errors/Errors';
+import Button from '@material-ui/core/Button';
 
 const SignOutButton = ({ setAuthToken, setUser }) => {
     const [error, setError] = useState("");
 
-    return <><button onClick={async (e) => {
+    return <><Button variant="outlined" color="primary" onClick={async (e) => {
         e.preventDefault();
         const response = await fetch(api.base + api.handlers.sessionsMine, {
             method: "DELETE",
@@ -21,7 +22,7 @@ const SignOutButton = ({ setAuthToken, setUser }) => {
         setError("");
         setAuthToken("");
         setUser(null);
-    }}>Sign out</button>
+    }}>Sign out</Button>
         {error &&
             <div>
                 <Errors error={error} setError={setError} />

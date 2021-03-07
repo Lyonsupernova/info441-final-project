@@ -8,19 +8,18 @@ import api from './Constants/APIEndpoints/APIEndpoints';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 //import CameraIcon from '@material-ui/icons/PhotoCamera';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
 import useStyles from './Styles/Style'
 import Footer from './Components/Footer/Footer'
+import CardType from './Constants/CardTypes/Cardtypes'
+import Card from './Components/Card/Card'
 import './App.css'
+import SignOutButton from './Components/Main/Components/SignOutButton/SignOutButton'
+import UpdateName from './Components/Main/Components/UpdateName/UpdateName'
 
 class App extends Component {
     constructor() {
@@ -29,7 +28,9 @@ class App extends Component {
             page: localStorage.getItem("Authorization") ? PageTypes.signedInMain : PageTypes.signIn,
             authToken: localStorage.getItem("Authorization") || null,
             user: null,
-            userSubscriptionData: null
+            loading: false,
+            userSubscriptionData: [1, 2],
+            productData: [1, 2]
         }
 
         this.getCurrentUser()
@@ -66,37 +67,83 @@ class App extends Component {
         const response = await fetch(api.base + api.handlers.myuser, {
             headers: new Headers({
                 "Authorization": this.state.authToken
-            })
+            }),
+            method: "GET"
         });
         if (response.status >= 300) {
             alert("Unable to fetch subscription data. Please try again");
             localStorage.setItem("Authorization", "");
             this.setAuthToken("");
-            this.setUser(null)
             return;
         }
         // need to convert response to json
-        this.setUserSubscriptionData(response);
+        this.setUserSubscriptionData(response.body);
     }
 
-    // need to fix this
-    deleteSubscription = async () => {
+    getProductData = async () => {
         if (!this.state.authToken) {
             return;
         }
         const response = await fetch(api.base + api.handlers.myuser, {
             headers: new Headers({
                 "Authorization": this.state.authToken
-            })
+            }),
+            method: "GET"
         });
         if (response.status >= 300) {
-            alert("Unable to fetch subscription data. Please try again");
+            alert("Unable to fetch Product data. Please try again");
             localStorage.setItem("Authorization", "");
             this.setAuthToken("");
-            this.setUser(null)
             return;
         }
         // need to convert response to json
+        this.setProductData(response.body);
+    }
+
+    createSubscription = async (product_id, product_name) => {
+        if (!this.state.authToken) {
+            return;
+        }
+        const reqData = {product_id, product_name}
+        const response = await fetch(api.base + api.handlers.myuser, {
+            headers: new Headers({
+                "Authorization": this.state.authToken
+            }),
+            method: "POST",
+            body: JSON.stringify(reqData)
+        });
+        if (response.status >= 300) {
+            alert("Unable to fetch Product data. Please try again");
+            localStorage.setItem("Authorization", "");
+            this.setAuthToken("");
+            return;
+        }
+
+        this.getSubscriptionData()
+    }
+
+    // need to fix this
+    deleteSub = async (id) => {
+        if (!this.state.authToken) {
+            return;
+        }
+
+        const reqData = {id}
+        
+        const response = await fetch(api.base + api.handlers.myuser, {
+            headers: new Headers({
+                "Authorization": this.state.authToken
+            }),
+            method: 'DELETE',
+            body: JSON.stringify(reqData)
+        });
+        if (response.status >= 300) {
+            alert("Unable to delete subscription. Please try again");
+            localStorage.setItem("Authorization", "");
+            return;
+        }
+
+        // refresh sub data and re-render
         this.getSubscriptionData()
     }
     /**
@@ -134,19 +181,6 @@ class App extends Component {
         this.setState({ user });
     }
 
-    Copyright = () => {
-        return (
-          <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-              Yichi Zhang, Lyon Lu, Wendell Li, Lance Zhong
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-          </Typography>
-        );
-      }
-
     render() {
         const { page, user } = this.state;
         return (
@@ -169,20 +203,16 @@ class App extends Component {
                     <Typography variant="h5" align="center" color="textSecondary" paragraph>
                         Get notificaiton about popular products, instantly
                     </Typography>
-                    <div className={useStyles.heroButtons}>
-                        <Grid container spacing={2} justify="center">
+                    {user && <div className={useStyles.heroButtons}>
+                        <Grid container spacing={2} justify="center" >
                         <Grid item>
-                            <Button variant="contained" color="primary">
-                            Main call to action
-                            </Button>
+                            <UpdateName user={this.user} setUser={this.setUser} />
                         </Grid>
                         <Grid item>
-                            <Button variant="outlined" color="primary">
-                            Secondary action
-                            </Button>
+                            <SignOutButton setUser={this.setUser} setAuthToken={this.setAuthToken} />
                         </Grid>
                         </Grid>
-                    </div>
+                    </div>}
                     </Container>
                 </div>
 
@@ -201,28 +231,7 @@ class App extends Component {
                         <h1>Currently Available product </h1>
                         <Grid container spacing={4}>
                         {this.state.userSubscriptionData.map((card) => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
-                            <Card className={useStyles.card}>
-                                <CardMedia
-                                className={useStyles.cardMedia}
-                                image="https://source.unsplash.com/random"
-                                title="Image title"
-                                />
-                                <CardContent className={useStyles.cardContent}>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    Heading
-                                </Typography>
-                                <Typography>
-                                    This is a media card. You can use this section to describe the content.
-                                </Typography>
-                                </CardContent>
-                                <CardActions>
-                                <Button size="small" color="primary">
-                                    Subscribe
-                                </Button>
-                                </CardActions>
-                            </Card>
-                            </Grid>
+                            <Card data={card} cardType={CardType.productCard}/>
                         ))}
                         </Grid>
                     </Container>
@@ -231,42 +240,19 @@ class App extends Component {
                         <h1>Your Current subscription</h1>
                         <Grid container spacing={4}>
                         {this.state.userSubscriptionData.map((card) => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
-                            <Card className={useStyles.card}>
-                                <CardMedia
-                                className={useStyles.cardMedia}
-                                image="https://source.unsplash.com/random"
-                                title="Image title"
-                                />
-                                <CardContent className={useStyles.cardContent}>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    Heading
-                                </Typography>
-                                <Typography>
-                                    This is a media card. You can use this section to describe the content.
-                                </Typography>
-                                </CardContent>
-                                <CardActions>
-                                <Button size="small" color="primary">
-                                    Edit
-                                </Button>
-                                <Button size="small" color="primary">
-                                    Delete
-                                </Button>
-                                </CardActions>
-                            </Card>
-                            </Grid>
+                            <Card data={card} cardType={CardType.userSubCard} deleteSub={this.deleteSub}/>
                         ))}
                         </Grid>
                     </Container>
                     </div>}
                 </main>
+
                 {/* Footer */}
                 <footer className={useStyles.footer}>
-                <Typography variant="h6" align="center" gutterBottom>
-                    Stock Station
-                </Typography>
-                <Footer/>
+                    <Typography variant="h6" align="center" gutterBottom>
+                        Stock Station
+                    </Typography>
+                    <Footer/>
                 </footer>
                 {/* End footer */}
             </React.Fragment>

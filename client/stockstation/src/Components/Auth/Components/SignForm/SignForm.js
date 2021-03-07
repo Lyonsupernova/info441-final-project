@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
 
 const SignForm = ({ setField, submitForm, values, fields }) => {
     return <>
@@ -16,7 +17,8 @@ const SignForm = ({ setField, submitForm, values, fields }) => {
                     />
                 </div>
             })}
-            <input type="submit" value="Submit" />
+            <input type="submit" name="submit" />
+            <Button size="small" type="submit"> Submit</Button>
         </form>
     </>
 }

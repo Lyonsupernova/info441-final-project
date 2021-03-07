@@ -1,5 +1,5 @@
 export default {
-    base: "https://api.yichi.me",
+    base: "https://api.stockstation.gay",
     testbase: "https://localhost:4000",
     handlers: {
         users: "/v1/users",
