@@ -73,39 +73,46 @@ class SignUp extends Component {
      * @description submitForm handles the form submission
      */
     submitForm = async (e) => {
-        e.preventDefault();
-        const { email,
-            userName,
-            firstName,
-            lastName,
-            password,
-            passwordConf } = this.state;
-        const sendData = {
-            email,
-            userName,
-            firstName,
-            lastName,
-            password,
-            passwordConf
-        };
-        const response = await fetch(api.base + api.handlers.users, {
-            method: "POST",
-            body: JSON.stringify(sendData),
-            headers: new Headers({
-                "Content-Type": "application/json"
-            })
-        });
-        if (response.status >= 300) {
-            const error = await response.text();
-            this.setError(error);
-            return;
+        try {
+            e.preventDefault();
+            const { email,
+                userName,
+                firstName,
+                lastName,
+                password,
+                passwordConf } = this.state;
+            const sendData = {
+                email,
+                userName,
+                firstName,
+                lastName,
+                password,
+                passwordConf
+            };
+            console.log(sendData)
+            const response = await fetch(api.base + api.handlers.users, {
+                mode: 'no-cors',
+                method: "POST",
+                body: JSON.stringify(sendData),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log(response)
+            if (response.status >= 300) {
+                const error = await response.text();
+                this.setError(error);
+                return;
+            }
+            const authToken = response.headers.get("Authorization")
+            localStorage.setItem("Authorization", authToken);
+            this.setError("");
+            this.props.setAuthToken(authToken);
+            const user = await response.json();
+            this.props.setUser(user);
+        } catch(err) {
+            console.log(err)
         }
-        const authToken = response.headers.get("Authorization")
-        localStorage.setItem("Authorization", authToken);
-        this.setError("");
-        this.props.setAuthToken(authToken);
-        const user = await response.json();
-        this.props.setUser(user);
     }
 
     render() {

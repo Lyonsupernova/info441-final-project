@@ -19,7 +19,7 @@ const Auth = ({ page, setPage, setAuthToken, setUser }) => {
         case PageTypes.forgotPassword:
             return <ForgotPassword setPage={setPage} />;
         default:
-            return <>Error, invalid path reached</>
+            return <SignUp setPage={setPage} setAuthToken={setAuthToken} setUser={setUser} />
     }
 }
 

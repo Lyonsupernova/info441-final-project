@@ -17,6 +17,7 @@ const SignForm = ({ setField, submitForm, values, fields }) => {
                     />
                 </div>
             })}
+            <input type="submit" name="submit" />
             <Button size="small" type="submit"> Submit</Button>
         </form>
     </>

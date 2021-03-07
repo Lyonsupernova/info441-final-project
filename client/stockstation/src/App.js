@@ -27,7 +27,7 @@ class App extends Component {
         this.state = {
             page: localStorage.getItem("Authorization") ? PageTypes.signedInMain : PageTypes.signIn,
             authToken: localStorage.getItem("Authorization") || null,
-            user: 2,
+            user: null,
             loading: false,
             userSubscriptionData: [1, 2],
             productData: [1, 2]
