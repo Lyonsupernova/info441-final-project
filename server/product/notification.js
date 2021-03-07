@@ -3,10 +3,11 @@
 const nodemailer = require("nodemailer");
 
 // async..await is not allowed in global scope, must use a wrapper
-const sendEmail = async (User, Product) => {
+const sendEmail = async (productName, Subscription) => {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   //let testAccount = await nodemailer.createTestAccount();
+  var Emails = getEmails(productName, Subscription)
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
@@ -22,7 +23,7 @@ const sendEmail = async (User, Product) => {
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: '"Stock Station" <stockstation8@gmail.com>', // sender address
-    to: User.Email, // list of receivers
+    to: Emails, // list of receivers format: abc@gmail.com,123@gmail.com
     subject: "Product Available!", // Subject line
     text: "Hello, your subscribed product" + Product.ProductName + "is avaialble at " + Product.ProductLink, // plain text body
     html: "<b>Hello, your subscribed product </b>" + Product.ProductName + "<b> is avaialble at <b>" + Product.ProductLink, // html body
@@ -34,6 +35,23 @@ const sendEmail = async (User, Product) => {
   // Preview only available when sending through an Ethereal account
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
+
+// return a list of emails of the users whow subscribe provided product
+function getEmails(productName, Subscription) {
+    // Connect to mongodb to request user information
+    const usersCusors = Subscription.find({"productName": productName}, {"email": 1})
+
+    // Creating a list of emails for notificatioin
+    var Emails = "";
+    while (usersCusors.hasNext()) {
+      if (length(emails) == 0) {
+        Emails = tojson(myCursor.next())["email"]
+      } else {
+        Emails = Emails + "," + tojson(myCursor.next())["email"]
+      }
+    }
+    return Emails
 }
 
 module.exports = {
