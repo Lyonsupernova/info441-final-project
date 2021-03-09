@@ -1,9 +1,9 @@
 # repull all containers
-docker network rm info441
-docker network create info441
+#docker network rm info441
+#docker network create info441
 
 docker rm -f redis
-docker run -d --name redis --network stockstation redis
+docker run -d --name redis --network info441 redis
 
 docker rm -f gateway
 docker pull lyons124/gateway:latest
