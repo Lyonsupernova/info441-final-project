@@ -12,7 +12,7 @@ type GetByType string
 
 // These are the enumerates for GetByType
 const (
-	ID       GetByType = "UserID"
+	ID       GetByType = "ID"
 	Email    GetByType = "Email"
 	UserName GetByType = "UserName"
 )
@@ -36,7 +36,7 @@ func NewMySQLStore(dataSourceName string) (*MySQLStore, error) {
 // getByProvidedType gets a specific user given the provided type.
 // This requires the GetByType to be "unique" in the database.
 func (ms *MySQLStore) getByProvidedType(t GetByType, arg interface{}) (*User, error) {
-	sel := string("select UserID, UserName, FirstName, LastName, Email, PassHash, Phone from Users where " + t + " = ?")
+	sel := string("select ID, Email, PassHash, UserName, FirstName, LastName, PhotoURL from Users where " + t + " = ?")
 
 	rows, err := ms.Database.Query(sel, arg)
 	if err != nil {
@@ -49,12 +49,13 @@ func (ms *MySQLStore) getByProvidedType(t GetByType, arg interface{}) (*User, er
 	// Should never have more than one row, so only grab one
 	rows.Next()
 	if err := rows.Scan(
-		&user.UserID,
+		&user.ID,
+		&user.Email,
+		&user.PassHash,
 		&user.UserName,
 		&user.FirstName,
 		&user.LastName,
-		&user.Email,
-		&user.PassHash); err != nil {
+		&user.PhotoURL); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -78,9 +79,9 @@ func (ms *MySQLStore) GetByUserName(username string) (*User, error) {
 //Insert inserts the user into the database, and returns
 //the newly-inserted User, complete with the DBMS-assigned ID
 func (ms *MySQLStore) Insert(user *User) (*User, error) {
-	ins := "insert into Users(UserName, FirstName, LastName, Email, PassHash, Phone) values (?,?,?,?,?,?)"
-	res, err := ms.Database.Exec(ins, user.UserName, user.FirstName, user.LastName,
-		user.Email, user.PassHash)
+	ins := "insert into Users(Email, PassHash, UserName, FirstName, LastName, PhotoURL) values (?,?,?,?,?,?)"
+	res, err := ms.Database.Exec(ins, user.Email, user.PassHash, user.UserName,
+		user.FirstName, user.LastName, user.PhotoURL)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +91,7 @@ func (ms *MySQLStore) Insert(user *User) (*User, error) {
 		return nil, lidErr
 	}
 
-	user.UserID = lid
+	user.ID = lid
 	return user, nil
 }
 
@@ -98,7 +99,7 @@ func (ms *MySQLStore) Insert(user *User) (*User, error) {
 //and returns the newly-updated user
 func (ms *MySQLStore) Update(id int64, updates *Updates) (*User, error) {
 	// Assumes updates ALWAYS includes FirstName and LastName
-	upd := "update Users set FirstName = ?, LastName = ? where UserID = ?"
+	upd := "update Users set FirstName = ?, LastName = ? where ID = ?"
 	res, err := ms.Database.Exec(upd, updates.FirstName, updates.LastName, id)
 	if err != nil {
 		return nil, err
@@ -119,7 +120,7 @@ func (ms *MySQLStore) Update(id int64, updates *Updates) (*User, error) {
 
 //Delete deletes the user with the given ID
 func (ms *MySQLStore) Delete(id int64) error {
-	del := "delete from Users where UserID = ?"
+	del := "delete from Users where ID = ?"
 	res, err := ms.Database.Exec(del, id)
 	if err != nil {
 		return err
@@ -140,7 +141,7 @@ func (ms *MySQLStore) Delete(id int64) error {
 // LogSignIn logs sign-in attempts
 func (ms *MySQLStore) LogSignIn(user *User, dateTime time.Time, clientIP string) error {
 	insertQuery := "insert into LogInfo(UserID,LogTime,IpAddress) values(?,?,?)"
-	_, err := ms.Database.Exec(insertQuery, user.UserID, dateTime, clientIP)
+	_, err := ms.Database.Exec(insertQuery, user.ID, dateTime, clientIP)
 	if err != nil {
 		return fmt.Errorf("error logging sign in: %v", err)
 	}

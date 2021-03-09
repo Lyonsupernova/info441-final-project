@@ -1,6 +1,8 @@
 package users
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"net/mail"
 	"strings"
@@ -17,12 +19,13 @@ var bcryptCost = 13
 
 //User represents a user account in the database
 type User struct {
-	UserID    int64  `json:"userID"`
+	ID        int64  `json:"id"`
+	Email     string `json:"-"` //never JSON encoded/decoded
+	PassHash  []byte `json:"-"` //never JSON encoded/decoded
 	UserName  string `json:"userName"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
-	Email     string `json:"email"`
-	PassHash  []byte `json:"-"` //never JSON encoded/decoded
+	PhotoURL  string `json:"photoURL"`
 }
 
 //Credentials represents user sign-in credentials
@@ -66,12 +69,11 @@ func (nu *NewUser) Validate() error {
 		return fmt.Errorf("UserName must be non-zero length and may not contain spaces")
 	}
 
-	//TODO: phone number validation
 	return nil
 }
 
 //ToUser converts the NewUser to a User, setting the
-//PassHash fields appropriately
+//PhotoURL and PassHash fields appropriately
 func (nu *NewUser) ToUser() (*User, error) {
 	validationErr := nu.Validate()
 	if validationErr != nil {
@@ -90,7 +92,16 @@ func (nu *NewUser) ToUser() (*User, error) {
 		return nil, passwordHashErr
 	}
 
+	GetGravitar(newUser, nu.Email)
 	return newUser, nil
+}
+
+// GetGravitar calculates the gravitar hash based on the string given and
+// stores it for the user
+func GetGravitar(user *User, str string) {
+	photoURLHash := md5.Sum([]byte(strings.ToLower(strings.TrimSpace(str))))
+	photoURLHashString := hex.EncodeToString(photoURLHash[:])
+	user.PhotoURL = gravatarBasePhotoURL + photoURLHashString
 }
 
 //FullName returns the user's full name, in the form:
