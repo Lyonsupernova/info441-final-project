@@ -10,7 +10,7 @@ productPostHandler = async(req, res, {Product}) => {
         user + " username: " + user['username'] + " id: " + user['id'] + user['email']);
         return;
     }
-    const {productName, productLink} = req.body;
+    const {productName, productLink, imageLink} = req.body;
     if (!productName) {
         res.status(400).send("no productname found");
         return;
@@ -18,13 +18,14 @@ productPostHandler = async(req, res, {Product}) => {
 
     const product = {
         "productName": productName,
-        "productLink": productLink
+        "productLink": productLink,
+        "imageLink": imageLink
     };
     // status code send with json created object
     const query = new Product(product);
     query.save((err, newProduct) => {
         if (err) {
-            res.status(400).send('unable to create a new subscription' + err);
+            res.status(400).send('unable to create a new product' + err);
             return;
         }
         res.setHeader('Content-Type', "application/json");

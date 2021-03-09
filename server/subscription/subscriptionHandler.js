@@ -84,7 +84,8 @@ subscriptionPostHandler = async(req, res, {Subscription, Product}) => {
         "productName": product.productName,
         "email": user['email'],
         "createdAt": createdAt,
-        "productLink": product['productLink']
+        "productLink": product['productLink'],
+        "imageLink": product['imageLink']
     };
     // status code send with json created object
     const query = new Subscription(subscription);
