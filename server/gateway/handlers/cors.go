@@ -30,9 +30,12 @@ func (hh *HeaderHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Expose-Headers", "Authorization")
 	w.Header().Set("Access-Control-Max-Age", "600")
 	start := time.Now()
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 	hh.Handler.ServeHTTP(w, r)
 	log.Printf("%s %s %v", r.Method, r.URL.Path, time.Since(start))
-
 }
 
 // NewHeaderHandler wraps the http.Handler into middleware structure

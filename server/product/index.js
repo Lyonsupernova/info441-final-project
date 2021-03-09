@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose')
-const mongoEndPoint = "mongodb://info441MongoDB:27017/subscribe"
+const mongoEndPoint = process.env.MONGOADDR
 const Product = mongoose.model("Product", productSchema)
 const Subscription = mongoose.model("Subscribe", subscribeSchema)
 

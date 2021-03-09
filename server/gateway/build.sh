@@ -1,7 +1,7 @@
 GOOS=linux go build
 
-docker build -t #TODO/gateway .
+docker build -t lyons124/finalGateway .
 
-docker push #TODO/gateway:latest
+docker push lyons124/finalGateway:latest
 
 go clean

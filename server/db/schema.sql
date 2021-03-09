@@ -3,9 +3,8 @@ create table if not exists Users (
     UserName nvarchar(255) not null unique,
     FirstName nvarchar(255) not null,
     LastName nvarchar(255) not null,
-    Email nvarchar(255) not null unique, 
-    PassHash binary(60) not null, 
-    Phone nvarchar(255) not null, unique
+    Email nvarchar(255) not null unique,
+    PassHash binary(60) not null
 );
 
 

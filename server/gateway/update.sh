@@ -1,12 +1,12 @@
 # repull all containers
-docker network rm stockstation
-docker network create stockstation
+docker network rm info441
+docker network create info441
 
 docker rm -f redis
 docker run -d --name redis --network stockstation redis
 
-docker rm -f gateway
-docker pull lyons124/gateway:latest
+docker rm -f finalGateway
+docker pull lyons124/finalGateway:latest
 
 docker rm -f 441mysql
 docker pull lyons124/441mysql
@@ -19,7 +19,7 @@ export MYSQL_ROOT_PASSWORD=$(openssl rand -base64 18)
 export DB_NAME=441sqlserver
 export REDISADDR=redis:6379
 export SUBSCRIPTION=subscription:80
-export SUMMARY=summary:80
+export PRODUCT=product:80
 
 # running mysql instance
 docker run -d \
@@ -27,7 +27,7 @@ docker run -d \
     -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
     -e MYSQL_DATABASE=$DB_NAME \
     --name 441mysql \
-	  --network stockstation \
+	  --network info441 \
     lyons124/441mysql
 
 export DSN=root:$MYSQL_ROOT_PASSWORD@tcp\(441mysql:3306\)/$DB_NAME
@@ -45,7 +45,7 @@ docker run -d \
   -e REDISADDR=$REDISADDR \
   -e MESSAGESADDR=$MESSAGESADDR \
   -e SUMMARYADDR=$SUMMARYADDR \
-  --network stockstation \
-  lyons124/gateway:latest
+  --network info441 \
+  lyons124/finalGateway:latest
 
 exit
