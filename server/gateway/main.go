@@ -71,7 +71,7 @@ func main() {
 		err := contextHandler.SessionStore.Get(sessID, sessState)
 
 		if err == nil {
-			newUser := &messageUser{sessState.User.UserID, sessState.User.UserName}
+			newUser := &messageUser{sessState.User.ID, sessState.User.UserName}
 			result, err := json.Marshal(newUser)
 			log.Println(string(result))
 			if err != nil {

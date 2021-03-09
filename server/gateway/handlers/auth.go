@@ -14,7 +14,6 @@ import (
 )
 
 // UsersHandler handles the request
-//TODO: might cause error because the change of struct of user!!!
 func (ch *ContextHandler) UsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "The request method is not legal", http.StatusMethodNotAllowed)
@@ -48,7 +47,7 @@ func (ch *ContextHandler) UsersHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
-	//TODO: might cause error?
+
 	insertUsr, err := ch.UserStore.Insert(usr)
 	if err != nil {
 		log.Printf("User database insert error %s", err)
@@ -93,13 +92,22 @@ func (ch *ContextHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	/*
+		sessionState := &SessionState{}
+		_, err = sessions.GetState(r, ch.SessionID, ch.SessionStore, sessionState)
+		if err != nil {
+			http.Error(w, "current session state is not valid", http.StatusUnauthorized)
+			return
+		}
+	*/
+
 	base := filepath.Base(r.URL.Path)
 	if r.Method == http.MethodGet {
 		// get the user profile from the url path last element
 		var usr *users.User
 		var err error
 		if base == "me" {
-			usr, err = ch.UserStore.GetByID(sessionState.User.UserID)
+			usr, err = ch.UserStore.GetByID(sessionState.User.ID)
 		} else {
 			userID, err2 := strconv.ParseInt(base, 10, 64)
 			if err2 != nil {
@@ -150,7 +158,7 @@ func (ch *ContextHandler) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 			http.Error(w, "Bad request", http.StatusBadRequest)
 			return
 		}
-		updateUsr, err := ch.UserStore.Update(sessionState.User.UserID, newUsr)
+		updateUsr, err := ch.UserStore.Update(sessionState.User.ID, newUsr)
 		if err != nil {
 			log.Printf("updated failed")
 			http.Error(w, "updated error found", http.StatusBadRequest)
