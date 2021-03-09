@@ -18,7 +18,7 @@ export SESSIONKEY=$(openssl rand -base64 18)
 export MYSQL_ROOT_PASSWORD=$(openssl rand -base64 18)
 export DB_NAME=441sqlserver
 export REDISADDR=redis:6379
-export SUBSCRIPTION=subscription:80
+export SUBSCRIPTION=subscribe:80
 export PRODUCT=product:80
 
 # running mysql instance

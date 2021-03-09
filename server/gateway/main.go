@@ -53,6 +53,7 @@ func main() {
 	type messageUser struct {
 		ID       int64  `json:"id"`
 		UserName string `json:"username"`
+		Email    string `json:"email"`
 	}
 
 	// Setting director for subscription microservices
@@ -71,7 +72,7 @@ func main() {
 		err := contextHandler.SessionStore.Get(sessID, sessState)
 
 		if err == nil {
-			newUser := &messageUser{sessState.User.ID, sessState.User.UserName}
+			newUser := &messageUser{sessState.User.ID, sessState.User.UserName, sessState.User.Email}
 			result, err := json.Marshal(newUser)
 			log.Println(string(result))
 			if err != nil {
