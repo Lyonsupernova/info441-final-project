@@ -8,7 +8,7 @@ import (
 
 // Start a periodic call process
 func callProduct(PRODUCT string) {
-	url := PRODUCT + "/products"
+	url := "http://product:80/products"
 	for true {
 		call(url)
 		time.Sleep(time.Hour)

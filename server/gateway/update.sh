@@ -5,15 +5,15 @@ docker network create info441
 docker rm -f redis
 docker run -d --name redis --network stockstation redis
 
-docker rm -f finalGateway
-docker pull lyons124/finalGateway:latest
+docker rm -f gateway
+docker pull lyons124/gateway:latest
 
 docker rm -f 441mysql
 docker pull lyons124/441mysql
 
 # export all environment variables
-export TLSCERT=/etc/letsencrypt/live/#todo/fullchain.pem
-export TLSKEY=/etc/letsencrypt/live/#todo/privkey.pem
+export TLSCERT=/etc/letsencrypt/live/api.stockstation.gay/fullchain.pem
+export TLSKEY=/etc/letsencrypt/live/api.stockstation.gay/privkey.pem
 export SESSIONKEY=$(openssl rand -base64 18)
 export MYSQL_ROOT_PASSWORD=$(openssl rand -base64 18)
 export DB_NAME=441sqlserver
@@ -46,6 +46,6 @@ docker run -d \
   -e MESSAGESADDR=$MESSAGESADDR \
   -e SUMMARYADDR=$SUMMARYADDR \
   --network info441 \
-  lyons124/finalGateway:latest
+  lyons124/gateway:latest
 
 exit
