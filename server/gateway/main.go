@@ -89,6 +89,14 @@ func main() {
 		r.URL.Scheme = "http"
 	}
 
+	productDirector := func(r *http.Request) {
+		r.Host = PRODUCT
+		r.URL.Host = PRODUCT
+		r.URL.Scheme = "http"
+	}
+
+	// Settings reverse proxies
+	productProxy := &httputil.ReverseProxy{Director: productDirector}
 	//roductDirector := func(r *http.Request) {
 	//	r.Host = PRODUCT
 	//	r.URL.Host = PRODUCT
@@ -113,7 +121,8 @@ func main() {
 	mux.Handle("/v1/subscribe", subscriptionProxy)
 	mux.Handle("/v1/subscribe/", subscriptionProxy)
 	mux.Handle("/v1/product", subscriptionProxy)
-	//mux.Handle("/products", productProxy)
+	mux.Handle("/v1/product/", subscriptionProxy)
+	mux.Handle("/products", productProxy)
 	wrappedMux := handlers.NewHeaderHandler(mux)
 	log.Fatal(http.ListenAndServeTLS(addr, TLSCERT, TLSKEY, wrappedMux))
 }

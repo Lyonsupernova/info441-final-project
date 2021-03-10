@@ -7,6 +7,7 @@ const Subscription = mongoose.model("Subscribe", subscribeSchema)
 
 const app = express();
 const port = 80;
+app.use(express.json());
 
 const { getBestBuy, getWalmart } = require('./scrape')
 const { sendEmail } = require('./notification')
