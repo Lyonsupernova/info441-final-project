@@ -92,10 +92,11 @@ func main() {
 
 	// Call this function to intizalize callProducrt process
 	callProduct(PRODUCT)
-
 	// routings
 	mux := http.NewServeMux()
 	log.Printf("server is listening at %s...", addr)
+	log.Printf("subscription server is listening at: %s", SUBSCRIPTION)
+	log.Printf("product server is listening at: %s", PRODUCT)
 	mux.HandleFunc("/v1/users", contextHandler.UsersHandler)
 	mux.HandleFunc("/v1/users/", contextHandler.SpecificUserHandler)
 	mux.HandleFunc("/v1/sessions", contextHandler.SessionsHandler)

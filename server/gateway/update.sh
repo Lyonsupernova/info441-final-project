@@ -43,8 +43,8 @@ docker run -d \
   -e SESSIONKEY=$SESSIONKEY \
   -e DSN=$DSN \
   -e REDISADDR=$REDISADDR \
-  -e MESSAGESADDR=$MESSAGESADDR \
-  -e SUMMARYADDR=$SUMMARYADDR \
+  -e PRODUCT=$PRODUCT \
+  -e SUBSCRIPTION=$SUBSCRIPTION \
   --network info441 \
   lyons124/gateway:latest
 
