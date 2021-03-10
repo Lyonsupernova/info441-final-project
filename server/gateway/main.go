@@ -88,10 +88,19 @@ func main() {
 		r.URL.Host = SUBSCRIPTION
 		r.URL.Scheme = "http"
 	}
+
+	//roductDirector := func(r *http.Request) {
+	//	r.Host = PRODUCT
+	//	r.URL.Host = PRODUCT
+	//	r.URL.Scheme = "http"
+	//}
+
+	// Settings reverse proxies
 	subscriptionProxy := &httputil.ReverseProxy{Director: subscriptionDirector}
+	//productProxy := &httputil.ReverseProxy{Director: productDirector}
 
 	// Call this function to intizalize callProducrt process
-	callProduct(PRODUCT)
+	//callProduct()
 	// routings
 	mux := http.NewServeMux()
 	log.Printf("server is listening at %s...", addr)

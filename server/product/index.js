@@ -6,7 +6,7 @@ const Product = mongoose.model("Product", productSchema)
 const Subscription = mongoose.model("Subscribe", subscribeSchema)
 
 const app = express();
-const port = 3000;
+const port = 80;
 
 const { getBestBuy, getWalmart } = require('./scrape')
 const { sendEmail } = require('./notification')
@@ -98,7 +98,9 @@ const fetchProducts = async (User, Product) => {
         })
 }
 
-app.listen(port);
+app.listen(port, "", () => {
+    console.log(`server is listening ${port}`);
+});
 
 module.exports = {
     fetchProducts
