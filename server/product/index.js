@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose')
 const mongoEndPoint = process.env.MONGOADDR
 const {productSchema, subscribeSchema} = require('./schemas')
-const Product = mongoose.model("Product", productSchema)
-const Subscription = mongoose.model("Subscribe", subscribeSchema)
+var Product = mongoose.model("Product", productSchema)
+var Subscribe = mongoose.model("Subscribe", subscribeSchema)
 
 const app = express();
 const port = 80;
@@ -24,10 +24,20 @@ app.get('/products', async(req, res) => {
 
     // get url for ps5 at bestbuy
     const exProductName = "Sony - Playstation 5 Console"
-    const url = await Product.findOne({"productName": exProductName})['productLink']
+    var url = await Product.find({"productName": exProductName}, {"productLink": 1}, function (err, res) {
+        if (err) {
+            console.log("Something wrong retrieving url: %v", err);
+        }
+    });
+    //console.log("this is url: %s", url);
+
+    // Just for testing
+    // const emailQuery = await Subscription.find({"productName": exProductName}, {"email": 1});
+    // console.log(emailQuery);
 
     // url: Array<String>
-    const urlArr = await Product.find({"productName": exProductName})['productLink']
+    // const urlArr = await Product.find({"productName": exProductName})['productLink'];
+    //console.log(urlArr);
     // TODO: get a list of productname/urls
     // for (let i = 0; i < urlArr.length; i++) {
         // getBestBuy(url[i])
@@ -35,7 +45,7 @@ app.get('/products', async(req, res) => {
         //      res.writeHead(200, {'Content-Type': 'application/json'});
         //      res.write(JSON.stringify({"availability": available}));
         //      res.end();
-        //      sendEmail(exProductName, Subscription);
+        //      sendEmail(exProductName, Subscribe);
         //  })
         //  .catch((err) => {
         //      res.writeHead(400, {'Content-Type': 'application/json'})
@@ -48,11 +58,12 @@ app.get('/products', async(req, res) => {
          .then(available => {
              res.writeHead(200, {'Content-Type': 'application/json'});
              res.write(JSON.stringify({"availability": available}));
-             res.end();
              sendEmail(exProductName, Subscription);
+             res.end();
          })
          .catch((err) => {
-             res.writeHead(400, {'Content-Type': 'application/json'})
+             res.writeHead(400, {'Content-Type': 'application/json'});
+             console.log(err);
              res.write(JSON.stringify({"error": err}));
              res.end();
          })

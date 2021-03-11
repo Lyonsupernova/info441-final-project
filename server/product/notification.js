@@ -38,20 +38,24 @@ const sendEmail = async (productName, Subscription) => {
 }
 
 // return a list of emails of the users whow subscribe provided product
+// in the required format
 function getEmails(productName, Subscription) {
     // Connect to mongodb to request user information
-    const usersCusors = Subscription.find({"productName": productName}, {"email": 1})
 
-    // Creating a list of emails for notificatioin
-    var Emails = "";
-    while (usersCusors.hasNext()) {
-      if (length(emails) == 0) {
-        Emails = tojson(myCursor.next())["email"]
-      } else {
-        Emails = Emails + "," + tojson(myCursor.next())["email"]
-      }
+  var emails = Subscription.find({"productName": productName}, {"email": 1}, function(err, res) {
+    if (err) {
+      console.log("Something wrong retrieving url: %v", err);
     }
-    return Emails
+  });
+
+  var Emails;
+  if (emails.length >= 1) {
+    Emails = emails[0];
+    for (let i = 1; i < emails.length; i++) {
+      Emails += "," + emails[i];
+    };
+  }
+  return Emails;
 }
 
 module.exports = {
