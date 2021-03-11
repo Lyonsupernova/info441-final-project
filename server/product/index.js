@@ -29,11 +29,6 @@ app.get('/products', async(req, res) => {
             console.log("Something wrong retrieving url: %v", err);
         }
     });
-    //console.log("this is url: %s", url);
-
-    // Just for testing
-    // const emailQuery = await Subscription.find({"productName": exProductName}, {"email": 1});
-    // console.log(emailQuery);
 
     // url: Array<String>
     // const urlArr = await Product.find({"productName": exProductName})['productLink'];
