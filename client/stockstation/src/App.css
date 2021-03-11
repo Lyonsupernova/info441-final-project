@@ -1,11 +1,17 @@
-#html {
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100vh;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
 }
 
 #auth-page {
@@ -13,15 +19,98 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
   margin-top: 3em;
   margin-bottom: 3em;
 }
 
-Footer {
+footer {
   display: flex;
   flex-direction: column;
   width: 100%;
   justify-content: center;
-  margin-bottom: 4em;
+  margin-top: 3em;
+  margin-bottom: 2em;
+}
+
+#Greeting {
+  margin-top: 4em;
+}
+
+#main-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+}
+#auth-submit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+}
+
+#auth-button-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+#divider {
+  height: 1em;
+}
+
+.modal {
+  font-size: 12px;
+}
+
+.modal > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+}
+.modal > .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px 5px;
+}
+.modal > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+}
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.popup-content {    
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid #464545;
+
+  min-width: 30em;
+  min-height: 15em;
+}
+
+.popup-overlay {
+  -webkit-animation: anvil .3s cubic-bezier(.38,.1,.36,.9) forwards;
+  background: rgba(0,0,0,.5);
 }

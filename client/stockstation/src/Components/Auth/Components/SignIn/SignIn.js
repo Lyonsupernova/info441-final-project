@@ -88,8 +88,12 @@ class SignIn extends Component {
                 submitForm={this.submitForm}
                 values={values}
                 fields={this.fields} />
-            <Button onClick={(e) => this.props.setPage(e, PageTypes.signUp)}>Sign up instead</Button>
-            <Button onClick={(e) => this.props.setPage(e, PageTypes.forgotPassword)}>Forgot password</Button>
+
+            <div id="auth-button-container">
+                <Button variant="outlined" size="small" color="primary" onClick={(e) => this.props.setPage(e, PageTypes.signUp)}>Sign up instead</Button>
+                <div id='divider'></div>
+                <Button variant="outlined" size="small" color="primary" onClick={(e) => this.props.setPage(e, PageTypes.forgotPassword)}>Forgot password</Button>
+            </div>
         </>
     }
 }

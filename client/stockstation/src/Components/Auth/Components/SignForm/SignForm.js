@@ -1,24 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 const SignForm = ({ setField, submitForm, values, fields }) => {
     return <>
         <form onSubmit={submitForm}>
             {fields.map(d => {
-                const { key, name } = d;
+                const { key } = d;
                 return <div key={key}>
-                    <span>{name}: </span>
-                    <input
-                        value={values[key]}
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label={key}
                         name={key}
-                        onChange={setField}
+                        autoComplete="email"
+                        autoFocus
                         type={key === "password" || key === "passwordConf" ? "password" : ''}
+                        onChange={setField}
+                        value={values[key]}
+                        size="small"
                     />
                 </div>
             })}
-            <input type="submit" name="submit" />
-            <Button size="small" type="submit"> Submit</Button>
+            <div id="auth-submit-container">
+                <Button size="small" color="primary" variant="outlined" type="submit"> Submit</Button>
+            </div>
         </form>
     </>
 }

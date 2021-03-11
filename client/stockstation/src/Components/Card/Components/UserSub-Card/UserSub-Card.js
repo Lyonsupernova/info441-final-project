@@ -9,25 +9,42 @@ import Typography from '@material-ui/core/Typography';
 import useStyles from '../../../../Styles/Style'
 import Popup from 'reactjs-popup';
 import './UserSub-Card.css'
+import api from '../../../../Constants/APIEndpoints/APIEndpoints';
 
-const UserSubCard = ({card, deleteSub}) => {
+const UserSubCard = ({data, getSubData}) => {
 
-    // need a function to make a delete request 
+  const deleteSub = async (subscribeID) => {
+    console.log(api.base + api.handlers.subscription + `/${subscribeID}`)
+    const response = await fetch(api.base + api.handlers.subscription + `/${subscribeID}`, {
+        headers: new Headers({ "Authorization": localStorage.getItem("Authorization") }),
+        method: 'DELETE',
+    });
+    if (response.status >= 300) {
+        alert("Unable to delete subscription. Please try again");
+        return;
+    }
+
+    alert("Delete Success!")
+    // refresh sub data and re-render
+    getSubData()
+}
 
     return (
-        <Grid item key={card} xs={12} sm={6} md={4}>
+        <Grid item key={data.subscribeID} xs={12} sm={6} md={4}>
         <Card className={useStyles.card}>
             <CardMedia
             className={useStyles.cardMedia}
             image="https://source.unsplash.com/random"
             title="Image title"
+            style={{height: 15 + "em"}}
             />
             <CardContent className={useStyles.cardContent}>
             <Typography gutterBottom variant="h5" component="h2">
-                Heading
+                {data.productName}
             </Typography>
             <Typography>
-                This is a media card. You can use this section to describe the content.
+                <br/>
+                {`Subscribe date: ${data.createdAt}`}
             </Typography>
             </CardContent>
             <CardActions>
@@ -40,14 +57,16 @@ const UserSubCard = ({card, deleteSub}) => {
                     <button className="close" onClick={close}>
                       &times;
                     </button>
-                    <div className="header"> Modal Title </div>
+                    <div className="header"> Confirm Deletion </div>
                     <div className="content">
                       {' '}
                       Are yous sure to delete this product subscription?
                     </div>
                     <div className="actions">
 
-                      <button
+                    <Button
+                          variant='outlined'
+                          color='primary'
                           className="button"
                           onClick={() => {
                             console.log('modal closed ');
@@ -55,16 +74,18 @@ const UserSubCard = ({card, deleteSub}) => {
                           }}
                         >
                           Cancel
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                          variant='outlined'
+                          color='primary'
                         className="button"
                         onClick={() => {
-                          deleteSub(card._id) // might need to change the "_id" field name
+                          deleteSub(data.subscribeID) // might need to change the "_id" field name
                           close();
                         }}
                       >
                         Delete
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}

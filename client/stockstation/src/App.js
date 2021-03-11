@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import Auth from './Components/Auth/Auth';
 import PageTypes from './Constants/PageTypes/PageTypes';
-import Main from './Components/Main/Main';
 import './Styles/App.css';
 import api from './Constants/APIEndpoints/APIEndpoints';
 // marterial-ui template imports
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 //import CameraIcon from '@material-ui/icons/PhotoCamera';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -14,12 +12,16 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import useStyles from './Styles/Style'
+import theme from './Styles/theme'
 import Footer from './Components/Footer/Footer'
 import CardType from './Constants/CardTypes/Cardtypes'
 import Card from './Components/Card/Card'
 import './App.css'
-import SignOutButton from './Components/Main/Components/SignOutButton/SignOutButton'
-import UpdateName from './Components/Main/Components/UpdateName/UpdateName'
+import MOCK_SUBSCRIPTION_DATA from './Constants/StaticData/Mock-sub-data'
+import MOCK_PRODUCT_DATA from './Constants/StaticData/Mock-product-data'
+import GreetingAuth from './Components/Greeting-auth/Greeting-auth'
+import GreetingMenu from './Components/Greeting-menu/Greeting-menu'
+import { ThemeProvider } from '@material-ui/styles';
 
 class App extends Component {
     constructor() {
@@ -29,12 +31,14 @@ class App extends Component {
             authToken: localStorage.getItem("Authorization") || null,
             user: null,
             loading: false,
-            userSubscriptionData: [1, 2],
-            productData: [1, 2]
+            userSubscriptionData: MOCK_SUBSCRIPTION_DATA,
+            productData: MOCK_PRODUCT_DATA
         }
+        console.log("user is: ", this.state.user)
+        console.log("auth token is: ", this.state.authToken)
+        console.log("page is: ", this.state.page)
 
         this.getCurrentUser()
-        this.getSubscriptionData()
     }
 
     /**
@@ -58,13 +62,21 @@ class App extends Component {
         }
         const user = await response.json()
         this.setUser(user);
+
+        // get user-specific data after retrieved user data
+        this.getSubscriptionData()
+        this.getProductData()
+
+        console.log("user is: ", this.state.user)
+        console.log("auth token is: ", this.state.authToken)
+        console.log("page is: ", this.state.page)
     }
 
     getSubscriptionData = async () => {
         if (!this.state.authToken) {
             return;
         }
-        const response = await fetch(api.base + api.handlers.myuser, {
+        const response = await fetch(api.base + api.handlers.subscription, {
             headers: new Headers({
                 "Authorization": this.state.authToken
             }),
@@ -76,15 +88,16 @@ class App extends Component {
             this.setAuthToken("");
             return;
         }
-        // need to convert response to json
-        this.setUserSubscriptionData(response.body);
+
+        const subscriptionData = await response.json()
+        this.setUserSubscriptionData(subscriptionData)
     }
 
     getProductData = async () => {
         if (!this.state.authToken) {
             return;
         }
-        const response = await fetch(api.base + api.handlers.myuser, {
+        const response = await fetch(api.base + api.handlers.product, {
             headers: new Headers({
                 "Authorization": this.state.authToken
             }),
@@ -96,56 +109,11 @@ class App extends Component {
             this.setAuthToken("");
             return;
         }
-        // need to convert response to json
-        this.setProductData(response.body);
+
+        const productData = await response.json()
+        this.setProductData(productData);
     }
 
-    createSubscription = async (product_id, product_name) => {
-        if (!this.state.authToken) {
-            return;
-        }
-        const reqData = {product_id, product_name}
-        const response = await fetch(api.base + api.handlers.myuser, {
-            headers: new Headers({
-                "Authorization": this.state.authToken
-            }),
-            method: "POST",
-            body: JSON.stringify(reqData)
-        });
-        if (response.status >= 300) {
-            alert("Unable to fetch Product data. Please try again");
-            localStorage.setItem("Authorization", "");
-            this.setAuthToken("");
-            return;
-        }
-
-        this.getSubscriptionData()
-    }
-
-    // need to fix this
-    deleteSub = async (id) => {
-        if (!this.state.authToken) {
-            return;
-        }
-
-        const reqData = {id}
-        
-        const response = await fetch(api.base + api.handlers.myuser, {
-            headers: new Headers({
-                "Authorization": this.state.authToken
-            }),
-            method: 'DELETE',
-            body: JSON.stringify(reqData)
-        });
-        if (response.status >= 300) {
-            alert("Unable to delete subscription. Please try again");
-            localStorage.setItem("Authorization", "");
-            return;
-        }
-
-        // refresh sub data and re-render
-        this.getSubscriptionData()
-    }
     /**
      * @description sets the page type to sign in
      */
@@ -172,6 +140,11 @@ class App extends Component {
      */
     setAuthToken = (authToken) => {
         this.setState({ authToken, page: authToken === "" ? PageTypes.signIn : PageTypes.signedInMain });
+   
+   
+        console.log("user is: ", this.state.user)
+        console.log("auth token is: ", this.state.authToken)
+        console.log("page is: ", this.state.page)
     }
 
     /**
@@ -181,10 +154,30 @@ class App extends Component {
         this.setState({ user });
     }
 
+    /**
+     * @description sets the user subscription data
+     */
+    setUserSubscriptionData = (data) => {
+        this.setState({ userSubscriptionData: data });
+    }
+
+    /**
+     * @description sets available product data
+     */
+    setProductData = (data) => {
+        this.setState({productData: data})
+
+        console.log("user is: ", this.state.user)
+        console.log("auth token is: ", this.state.authToken)
+        console.log("page is: ", this.state.page)
+    }
+
     render() {
         const { page, user } = this.state;
         return (
-            <React.Fragment>
+            <div id="main-container">
+
+            <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <AppBar position="relative">
                 <Toolbar>
@@ -195,56 +188,42 @@ class App extends Component {
                 </AppBar>
                 <main>
                 {/* Hero unit */}
-                <div className={useStyles.heroContent}>
-                    <Container maxWidth="sm">
-                    <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                    Stock Station
-                    </Typography>
-                    <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                        Get notificaiton about popular products, instantly
-                    </Typography>
-                    {user && <div className={useStyles.heroButtons}>
-                        <Grid container spacing={2} justify="center" >
-                        <Grid item>
-                            <UpdateName user={this.user} setUser={this.setUser} />
-                        </Grid>
-                        <Grid item>
-                            <SignOutButton setUser={this.setUser} setAuthToken={this.setAuthToken} />
-                        </Grid>
-                        </Grid>
-                    </div>}
-                    </Container>
-                </div>
+                    <div className={useStyles.heroContent} id="Greeting">
+                        <Container maxWidth="sm">
+                            {!user ? (<GreetingAuth/>) : (<GreetingMenu user={user} setUser={this.setUser} setAuthToken={this.setAuthToken}/>)}
+                        </Container>
+                    </div>
 
-                <div id="auth-page">
-                    {!user &&
-                        <Auth page={page}
-                            setPage={this.setPage}
-                            setAuthToken={this.setAuthToken}
-                            setUser={this.setUser} />
-                    }
-                </div>
-                {(this.state.userSubscriptionData && user) && 
-                    <div id="user-specific-sub-info">
-                    <Container className={useStyles.cardGrid} maxWidth="md">
-                        {/* End hero unit */}
-                        <h1>Currently Available product </h1>
-                        <Grid container spacing={4}>
-                        {this.state.userSubscriptionData.map((card) => (
-                            <Card data={card} cardType={CardType.productCard}/>
-                        ))}
-                        </Grid>
-                    </Container>
-                    <Container className={useStyles.cardGrid} maxWidth="md">
-                        {/* End hero unit */}
-                        <h1>Your Current subscription</h1>
-                        <Grid container spacing={4}>
-                        {this.state.userSubscriptionData.map((card) => (
-                            <Card data={card} cardType={CardType.userSubCard} deleteSub={this.deleteSub}/>
-                        ))}
-                        </Grid>
-                    </Container>
-                    </div>}
+                    <div id="auth-page">
+                        {(!user || this.state.page === PageTypes.signIn) &&
+                            <Auth page={page}
+                                setPage={this.setPage}
+                                setAuthToken={this.setAuthToken}
+                                setUser={this.setUser} />
+                        }
+                    </div>
+
+                    {((this.state.userSubscriptionData || user) && this.state.page === PageTypes.signedInMain) && 
+                        <div id="user-specific-info">
+                        <Container className={useStyles.cardGrid} maxWidth="md">
+                            {/* End hero unit */}
+                            <h1>Currently Available product </h1>
+                            <Grid container spacing={4}>
+                            {this.state.productData.map((card) => (
+                                <Card data={card} cardType={CardType.productCard} getSubData={this.getSubscriptionData} />
+                            ))}
+                            </Grid>
+                        </Container>
+                        <Container className={useStyles.cardGrid} maxWidth="md">
+                            {/* End hero unit */}
+                            <h1>Your Current subscription</h1>
+                            <Grid container spacing={4}>
+                            {this.state.userSubscriptionData.map((card) => (
+                                <Card data={card} cardType={CardType.userSubCard} getSubData={this.getSubscriptionData}/>
+                            ))}
+                            </Grid>
+                        </Container>
+                        </div>}
                 </main>
 
                 {/* Footer */}
@@ -252,10 +231,11 @@ class App extends Component {
                     <Typography variant="h6" align="center" gutterBottom>
                         Stock Station
                     </Typography>
-                    <Footer/>
+                    <Footer />
                 </footer>
                 {/* End footer */}
-            </React.Fragment>
+                </ThemeProvider> 
+            </div>
         );
     }
 }

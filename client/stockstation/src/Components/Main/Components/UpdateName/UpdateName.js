@@ -3,6 +3,24 @@ import api from '../../../../Constants/APIEndpoints/APIEndpoints';
 import Errors from '../../../Errors/Errors';
 import Button from '@material-ui/core/Button';
 import Popup from 'reactjs-popup';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+
+const theme = createMuiTheme({
+    palette: {
+      primary: {
+        // Purple and green play nicely together.
+        main: '#11cb5f',
+      },
+      secondary: {
+        // This is green.A700 as hex.
+        main: '#11cb5f',
+      },
+    },
+  });
 
 class UpdateName extends Component {
     constructor(props) {
@@ -10,7 +28,6 @@ class UpdateName extends Component {
         this.state = {
             firstName: '',
             lastName: '',
-            email: '',
             error: ''
         }
     }
@@ -47,7 +64,7 @@ class UpdateName extends Component {
     }
 
     render() {
-        const { firstName, lastName, email, error } = this.state;
+        const { firstName, lastName, error } = this.state;
         return <>
             <Errors error={error} setError={this.setError} />
 
@@ -57,23 +74,45 @@ class UpdateName extends Component {
 
                 {close => (
                   <div className="modal">
-                    <div>Enter a new name</div>
+                    <Typography>Enter a new name</Typography>
                     <form onSubmit={this.sendRequest}>
-                        <div>
-                            <span>First name: </span>
-                            <input name={"firstName"} value={firstName} onChange={this.setValue} />
+                        <div >
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="firstName"
+                                name="firstName"
+                                autoComplete="firstName"
+                                autoFocus
+                                type=''
+                                onChange={this.setValue}
+                                value={firstName}
+                                size="small"
+                            />
                         </div>
-                        <div>
-                            <span>Last name: </span>
-                            <input name={"lastName"} value={lastName} onChange={this.setValue} />
+                        <div >
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="lastName"
+                                label="lastName"
+                                name="lastName"
+                                autoComplete="lastName"
+                                autoFocus
+                                type=''
+                                onChange={this.setValue}
+                                value={lastName}
+                                size="small"
+                            />
                         </div>
-                        <div>
-                            <span>Email: </span>
-                            <input name={"email"} value={email} onChange={this.setValue} />
-                        </div>
-                        <Button size="small" type="submit"> Submit</Button>
+                        <Button size="small" type="submit" color="primary"> Submit</Button>
                 
-                        <Button size="small" type="submit" onClick={() => {close()}}>Cancel</Button>
+                        <Button size="small" color="primary" onClick={() => {close()}}>Cancel</Button>
                     </form>
                   </div>
                 )}

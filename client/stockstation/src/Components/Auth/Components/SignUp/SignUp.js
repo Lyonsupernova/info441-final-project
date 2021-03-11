@@ -4,6 +4,7 @@ import SignForm from '../SignForm/SignForm';
 import api from '../../../../Constants/APIEndpoints/APIEndpoints';
 import Errors from '../../../Errors/Errors';
 import PageTypes from '../../../../Constants/PageTypes/PageTypes';
+import Button from '@material-ui/core/Button';
 
 /**
  * @class
@@ -91,12 +92,11 @@ class SignUp extends Component {
             };
             console.log(sendData)
             const response = await fetch(api.base + api.handlers.users, {
-                mode: 'no-cors',
                 method: "POST",
                 body: JSON.stringify(sendData),
-                headers: {
+                headers: new Headers({
                     "Content-Type": "application/json"
-                }
+                })
             });
             console.log(response)
             if (response.status >= 300) {
@@ -125,7 +125,8 @@ class SignUp extends Component {
                 submitForm={this.submitForm}
                 values={values}
                 fields={this.fields} />
-            <button onClick={(e) => this.props.setPage(e, PageTypes.signIn)}>Sign in instead</button>
+                <div id="divider"></div>
+            <Button variant='outlined' color='primary' size='small' onClick={(e) => this.props.setPage(e, PageTypes.signIn)}>Sign in instead</Button>
         </>
     }
 }
