@@ -10,4 +10,4 @@ ADD  default.conf /etc/nginx/conf.d/default.conf
 # Copy web site files into the container at the html directory
 COPY .  /usr/share/nginx/html
 
-EXPOSE 443
+EXPOSE 80 443
