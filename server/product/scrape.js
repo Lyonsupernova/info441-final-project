@@ -16,7 +16,9 @@ const getBestBuy = async (url) => {
         },
         transform: (body) => cheerio.load(body)
     };
+    console.log(options);
     const $ = await rp(options);
+    console.log($);
 
     const titleText = $(".title").first().text();
     console.log(titleText);
