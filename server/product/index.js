@@ -24,44 +24,32 @@ app.get('/products', async(req, res) => {
 
     // get url for ps5 at bestbuy
     const exProductName = "Sony - Playstation 5 Console"
-    var url = await Product.find({"productName": exProductName}, {"productLink": 1}, function (err, res) {
+    var urls = await Product.find({"productName": exProductName}, {"productLink": 1}, function (err, res) {
         if (err) {
             console.log("Something wrong retrieving url: %v", err);
         }
     });
 
-    // url: Array<String>
-    // const urlArr = await Product.find({"productName": exProductName})['productLink'];
-    //console.log(urlArr);
-    // TODO: get a list of productname/urls
-    // for (let i = 0; i < urlArr.length; i++) {
-        // getBestBuy(url[i])
-        //  .then(available => {
-        //      res.writeHead(200, {'Content-Type': 'application/json'});
-        //      res.write(JSON.stringify({"availability": available}));
-        //      res.end();
-        //      sendEmail(exProductName, Subscribe);
-        //  })
-        //  .catch((err) => {
-        //      res.writeHead(400, {'Content-Type': 'application/json'})
-        //      res.write(JSON.stringify({"error": err}));
-        //      res.end();
-        //  })
 
-    // }
-    getBestBuy(url)
-         .then(available => {
-             res.writeHead(200, {'Content-Type': 'application/json'});
-             res.write(JSON.stringify({"availability": available}));
-             sendEmail(exProductName, Subscription);
-             res.end();
-         })
-         .catch((err) => {
-             res.writeHead(400, {'Content-Type': 'application/json'});
-             console.log(err);
-             res.write(JSON.stringify({"error": err}));
-             res.end();
-         })
+    if (urls.length != 0) {
+        for (let i = 0; i < urls.size(); i++) {
+            getBestBuy(urls[i].productLink)
+                .then(available => {
+                    res.writeHead(200, {'Content-Type': 'application/json'});
+                    res.write(JSON.stringify({"availability": available}));
+                    sendEmail(exProductName, Subscription);
+                    res.end();
+                })
+                .catch((err) => {
+                    res.writeHead(400, {'Content-Type': 'application/json'});
+                    console.log(err);
+                    res.write(JSON.stringify({"error": err}));
+                    res.end();
+                })
+        }
+    } else {
+        res.status(204).send("Unable to find the url for this product");
+    }
 
     //getWalmart(url)
     //    .then(available => {

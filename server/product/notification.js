@@ -50,9 +50,9 @@ function getEmails(productName, Subscription) {
 
   var Emails;
   if (emails.length >= 1) {
-    Emails = emails[0];
+    Emails = emails[0].email;
     for (let i = 1; i < emails.length; i++) {
-      Emails += "," + emails[i];
+      Emails += "," + emails[i].email;
     };
   }
   return Emails;
