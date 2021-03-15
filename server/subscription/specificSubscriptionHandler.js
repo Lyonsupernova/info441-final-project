@@ -43,7 +43,7 @@ mongoose.set('useFindAndModify', false);
 
 // };
 
-specficSubscriptionDeleteHandler = async function(req, res, {Subscription}) {
+specficSubscriptionDeleteHandler = async function(req, res, {Subscribe}) {
     if (!req.get('X-User')) {
         res.status(401).send("unauthorized user");
         return;
@@ -55,19 +55,20 @@ specficSubscriptionDeleteHandler = async function(req, res, {Subscription}) {
     }
     // If the current user isn't the creator of this subscription,
     // respond with the status code 403 (Forbidden).
-    const subscriptionID = req.params.subscriptionID;
-    const subscription = await Subscription.findOne({"subscribeID" : subscriptionID}).exec();
+    const subscriptionID = req.body["subscriptionID"];
+    const subscription = await Subscribe.findOne({"subscribeID" : subscriptionID}).exec();
     if (!subscription) {
         res.status(400).send("Subscription not exist subscriptionID");
         return;
     }
+
     // if (subscription['userID'] != user['id']) {
     //    res.status(403).send("user not the creator of subscription");
     //    return;
     // }
     // delete the channel and all messages related to it.
     // Respond with a plain text message indicating that the delete was successful.
-    Subscription.findOneAndDelete({'subscribeID' : subscriptionID}, function(err, data) {
+    Subscribe.findOneAndDelete({'subscribeID' : subscriptionID}, function(err, data) {
         if (err) {
             res.status(400).send("subscription delete error");
             return;
