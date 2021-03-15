@@ -10,7 +10,7 @@ productPostHandler = async(req, res, {Product}) => {
         user + " username: " + user['username'] + " id: " + user['id'] + user['email']);
         return;
     }
-    const {productName, productLink, imageLink} = req.body;
+    const {productName, productLink, imageLink, description} = req.body;
     if (!productName) {
         res.status(400).send("no productname found");
         return;
@@ -19,7 +19,8 @@ productPostHandler = async(req, res, {Product}) => {
     const product = {
         "productName": productName,
         "productLink": productLink,
-        "imageLink": imageLink
+        "imageLink": imageLink,
+        "description": description
     };
     // status code send with json created object
     const query = new Product(product);

@@ -55,7 +55,7 @@ specficSubscriptionDeleteHandler = async function(req, res, {Subscribe}) {
     }
     // If the current user isn't the creator of this subscription,
     // respond with the status code 403 (Forbidden).
-    const subscriptionID = req.body["subscriptionID"];
+    const subscriptionID = req.params.subscriptionID;
     const subscription = await Subscribe.findOne({"subscribeID" : subscriptionID}).exec();
     if (!subscription) {
         res.status(400).send("Subscription not exist subscriptionID");
