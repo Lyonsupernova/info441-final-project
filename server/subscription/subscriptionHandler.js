@@ -38,7 +38,6 @@ subscriptionGetHandler = async(req, res, {Subscribe}) => {
         subscriptions = await Subscribe.find({"userID": user['id']});
         // for loop ? ---> handling
         // products = await Product.find({"productID" : subscriptions[productID]});
-        console.log(subscriptions);
         res.json(subscriptions);
     } catch (e) {
         res.status(500).send("subscriptions not found" + user['id'] + user['username']);
@@ -60,13 +59,16 @@ subscriptionPostHandler = async(req, res, {Subscribe, Product}) => {
     // input: ps4
     // mongodb (id:1, ps4, productlink: www.ps4.com)
     // productid
-    const {productID} = req.body["productID"];
+    const productID = req.body.productID;
+    console.log("body: ", req.body)
+    console.log("productID: ", productID)
     if (!productID) {
         res.status(400).send("no productname found");
         return;
     }
     // find product ID
     const product = await Product.findOne({"productID": productID});
+    console.log("product: ", product)
     if (!product) {
         res.status(400).send("no product named " + productName + " stored in the db");
         return;
@@ -87,6 +89,7 @@ subscriptionPostHandler = async(req, res, {Subscribe, Product}) => {
         "productLink": product['productLink'],
         "imageLink": product['imageLink']
     };
+    console.log("subscription: ", subscription)
     // status code send with json created object
     const query = new Subscribe(subscription);
     query.save((err, newSubscription) => {

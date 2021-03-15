@@ -17,7 +17,7 @@ const connect = () => {
 connect();
 
 app.listen(port, "", () => {
-    console.log(`server is listening ${port}, subscribe obj: ${Subscribe}`);
+    console.log(`server is listening ${port}`);
 })
 const {
     subscriptionGetHandler,

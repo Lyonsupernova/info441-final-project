@@ -5,6 +5,7 @@ const productSchema = new Schema({
     productID: {type: ObjectId, required: true, unique: true, auto: true},
     productName: {type: String, unique: true, required: true},
     productLink: String,
+    description: String,
     imageLink: {type: String, required: true}
 });
 
