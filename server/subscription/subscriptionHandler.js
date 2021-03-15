@@ -41,7 +41,7 @@ subscriptionGetHandler = async(req, res, {Subscription}) => {
         console.log(subscriptions);
         res.json(subscriptions);
     } catch (e) {
-        res.status(500).send("subscriptions not found" + user['id'] + users['username']);
+        res.status(500).send("subscriptions not found" + user['id'] + user['username']);
     }
 };
 
