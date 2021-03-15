@@ -44,12 +44,12 @@ const ProductCard = ({ data, getSubData }) => {
                     {data.productName}
                 </Typography>
                 <Typography>
-                    This is the newest gaming console released by Sony. Item sold out fast and please subscribe asap!
+                    {data.description}
                 </Typography>
 
                 <Typography>
                     <br/>
-                    <a href={data.productLink}>Link to the product </a>
+                    <a href={data.productLink} className='product-link'>Link to the product </a>
                 </Typography>
                 </CardContent>
                 <CardActions>
