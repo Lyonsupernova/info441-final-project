@@ -8,6 +8,6 @@ FROM nginx
 # Use modified default.conf file
 ADD  default.conf /etc/nginx/conf.d/default.conf
 # Copy web site files into the container at the html directory
-COPY ./build /usr/share/nginx/html
+COPY build /usr/share/nginx/html
 
 EXPOSE 80 443
