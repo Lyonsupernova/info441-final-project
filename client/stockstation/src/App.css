@@ -114,3 +114,10 @@ main {
   -webkit-animation: anvil .3s cubic-bezier(.38,.1,.36,.9) forwards;
   background: rgba(0,0,0,.5);
 }
+
+/* #user-specific-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} */

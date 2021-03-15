@@ -31,8 +31,8 @@ class App extends Component {
             authToken: localStorage.getItem("Authorization") || null,
             user: null,
             loading: false,
-            userSubscriptionData: MOCK_SUBSCRIPTION_DATA,
-            productData: MOCK_PRODUCT_DATA
+            userSubscriptionData: null,
+            productData: null
         }
         console.log("user is: ", this.state.user)
         console.log("auth token is: ", this.state.authToken)
@@ -141,7 +141,6 @@ class App extends Component {
     setAuthToken = (authToken) => {
         this.setState({ authToken, page: authToken === "" ? PageTypes.signIn : PageTypes.signedInMain });
    
-   
         console.log("user is: ", this.state.user)
         console.log("auth token is: ", this.state.authToken)
         console.log("page is: ", this.state.page)
@@ -173,7 +172,7 @@ class App extends Component {
     }
 
     render() {
-        const { page, user } = this.state;
+        const { page, user, userSubscriptionData, productData} = this.state;
         return (
             <div id="main-container">
 
@@ -203,13 +202,13 @@ class App extends Component {
                         }
                     </div>
 
-                    {((this.state.userSubscriptionData || user) && this.state.page === PageTypes.signedInMain) && 
+                    {(user && this.state.page === PageTypes.signedInMain) && 
                         <div id="user-specific-info">
                         <Container className={useStyles.cardGrid} maxWidth="md">
                             {/* End hero unit */}
                             <h1>Currently Available product </h1>
                             <Grid container spacing={4}>
-                            {this.state.productData.map((card) => (
+                            {productData && productData.map((card) => (
                                 <Card data={card} cardType={CardType.productCard} getSubData={this.getSubscriptionData} />
                             ))}
                             </Grid>
@@ -218,9 +217,15 @@ class App extends Component {
                             {/* End hero unit */}
                             <h1>Your Current subscription</h1>
                             <Grid container spacing={4}>
-                            {this.state.userSubscriptionData.map((card) => (
+                            {userSubscriptionData && userSubscriptionData.map((card) => (
                                 <Card data={card} cardType={CardType.userSubCard} getSubData={this.getSubscriptionData}/>
                             ))}
+
+                            {!userSubscriptionData && 
+                                <Typography component="h4" variant="h2" align="center" color="textPrimary" gutterBottom>
+                                    Stock Station
+                                </Typography>
+                            }
                             </Grid>
                         </Container>
                         </div>}
