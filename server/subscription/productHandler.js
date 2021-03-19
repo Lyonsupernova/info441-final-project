@@ -58,4 +58,25 @@ productGetHandler = async(req, res, {Product}) => {
     }
 };
 
-module.exports = {productGetHandler, productPostHandler};
+productDeleteHandler = async(req, res, {Product}) => {
+    const productID = req.params.productID;
+    const product = await Product.findOne({"productID" : productID}).exec();
+    if (!product) {
+        res.status(400).send("Product not exist productID");
+        return;
+    }
+
+    Product.findOneAndDelete({'productID' : productID}, function(err, data) {
+        if (err) {
+            res.status(400).send("subscription delete error");
+            return;
+        }
+        if (!data) {
+            res.status(400).send("subscription not found");
+            return;
+        }
+        res.status(200).send("Deleted product sucessfully: " + data);
+    });
+
+}
+module.exports = {productGetHandler, productPostHandler, productDeleteHandler};

@@ -79,6 +79,7 @@ func main() {
 				log.Printf("Unable to encode X-User for messaging: %v", err)
 				return
 			}
+			log.Printf("Email of user is %s...", sessState.User.Email)
 			r.Header.Set("X-User", fmt.Sprint(string(result)))
 		} else {
 			r.Header.Del("X-User")

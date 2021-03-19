@@ -115,24 +115,23 @@ const sendEmail = async (emailAddr, userName, productName) => {
 
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 546587,
-    secure: false, // true for 465, false for other ports
+    service: 'gmail',
     auth: {
-      user: "stockstation8@gmail.com", // generated ethereal user
-      pass: "deuqfeeadudogxbx", // generated ethereal password
+      user: "lyons2000124@gmail.com", // generated ethereal user
+      pass: "ldysy888", // generated ethereal password
     }
   });
-
+  console.log("tranporter established: ", transporter)
+  console.log("EmailAddr: ", emailAddr)
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Stock Station" <stockstation8@gmail.com>', // sender address
+    from: '"Stock Station" <lyons2000124@gmail.com>', // sender address
     to: emailAddr, // list of receivers format: abc@gmail.com,123@gmail.com
     subject: "StockStation product subscription confrimation", // Subject line
     text: "Hello " + userName + ", You have successfully subscribed to the product " + `"${productName}"` + "Thanks for using our service and we'll notify you immidiately when the product become available", // plain text body
     html: `<b>Hello ${userName}, You have successfully subscribed to the product "${productName}" Thanks for using our service and we'll notify you immidiately when the product become available</b>` // html body
   });
-
+  console.log("info: ", info)
   console.log("Message sent: %s", info.messageId);
   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 }

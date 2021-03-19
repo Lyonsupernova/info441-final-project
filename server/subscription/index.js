@@ -27,7 +27,7 @@ const {
 
 const {specficSubscriptionDeleteHandler} = require('./specificSubscriptionHandler');
 
-const {productGetHandler, productPostHandler} = require('./productHandler');
+const {productGetHandler, productPostHandler, productDeleteHandler} = require('./productHandler');
 
 
 const RequestWrapper = (handler, SchemeAndDBForwarder) => {
@@ -41,3 +41,4 @@ app.post("/v1/subscribe", RequestWrapper(subscriptionPostHandler, { Subscribe, P
 app.delete("/v1/subscribe/:subscriptionID", RequestWrapper(specficSubscriptionDeleteHandler, { Subscribe }))
 app.get("/v1/product", RequestWrapper(productGetHandler, { Product }))
 app.post("/v1/product", RequestWrapper(productPostHandler, { Product }))
+app.delete("/v1/product/:productID", RequestWrapper(productDeleteHandler, { Product }))
