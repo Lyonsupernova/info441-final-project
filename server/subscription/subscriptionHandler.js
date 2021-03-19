@@ -9,6 +9,7 @@
 //TODO: get product, a list of product
 
 var mongoose = require('mongoose'); 
+const nodemailer = require("nodemailer");
 
 var Schema = mongoose.Schema; 
 
@@ -90,6 +91,9 @@ subscriptionPostHandler = async(req, res, {Subscribe, Product}) => {
         "imageLink": product['imageLink']
     };
     console.log("subscription: ", subscription)
+
+    console.log("sending confirmation email.....")
+    sendEmail(user['email'], user['userName'], product.productName);
     // status code send with json created object
     const query = new Subscribe(subscription);
     query.save((err, newSubscription) => {
@@ -102,5 +106,35 @@ subscriptionPostHandler = async(req, res, {Subscribe, Product}) => {
         return;
     });
 };
+
+// async..await is not allowed in global scope, must use a wrapper
+const sendEmail = async (emailAddr, userName, productName) => {
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  //let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 546587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "stockstation8@gmail.com", // generated ethereal user
+      pass: "deuqfeeadudogxbx", // generated ethereal password
+    }
+  });
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '"Stock Station" <stockstation8@gmail.com>', // sender address
+    to: emailAddr, // list of receivers format: abc@gmail.com,123@gmail.com
+    subject: "StockStation product subscription confrimation", // Subject line
+    text: "Hello " + userName + ", You have successfully subscribed to the product " + `"${productName}"` + "Thanks for using our service and we'll notify you immidiately when the product become available", // plain text body
+    html: `<b>Hello ${userName}, You have successfully subscribed to the product "${productName}" Thanks for using our service and we'll notify you immidiately when the product become available</b>` // html body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+}
 
 module.exports = {subscriptionGetHandler, subscriptionPostHandler};
