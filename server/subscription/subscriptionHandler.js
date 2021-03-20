@@ -90,10 +90,15 @@ subscriptionPostHandler = async(req, res, {Subscribe, Product}) => {
         "productLink": product['productLink'],
         "imageLink": product['imageLink']
     };
+    console.log("username: ", user['username'])
+    console.log("userName: ", user['userName'])
+    console.log("UserName: ", user['UserName'])
+    console.log("user: ", user)
     console.log("subscription: ", subscription)
 
     console.log("sending confirmation email.....")
-    sendEmail(user['email'], user['userName'], product.productName);
+    
+    sendEmail(user['email'], user['username'], product.productName);
     // status code send with json created object
     const query = new Subscribe(subscription);
     query.save((err, newSubscription) => {
@@ -117,19 +122,20 @@ const sendEmail = async (emailAddr, userName, productName) => {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: "lyons2000124@gmail.com", // generated ethereal user
-      pass: "ldysy888", // generated ethereal password
+      user: "stockstation666@gmail.com", // generated ethereal user
+      pass: "stockstation", // generated ethereal password
     }
   });
   console.log("tranporter established: ", transporter)
   console.log("EmailAddr: ", emailAddr)
+  console.log("userName: ", userName)
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Stock Station" <lyons2000124@gmail.com>', // sender address
+    from: '"Stock Station" <stockstation666@gmail.com>', // sender address
     to: emailAddr, // list of receivers format: abc@gmail.com,123@gmail.com
     subject: "StockStation product subscription confrimation", // Subject line
-    text: "Hello " + userName + ", You have successfully subscribed to the product " + `"${productName}"` + "Thanks for using our service and we'll notify you immidiately when the product become available", // plain text body
-    html: `<b>Hello ${userName}, You have successfully subscribed to the product "${productName}" Thanks for using our service and we'll notify you immidiately when the product become available</b>` // html body
+    text: "Hello " + `"${userName}"` + "You have successfully subscribed to the product " + `"${productName}"` + "Thanks for using our service and we'll notify you immidiately when the product become available", // plain text body
+    html: `<b>Hello ${userName}, You have successfully subscribed to the product "${productName}" <br>Thanks for using our service and we'll notify you immidiately when the product become available</b>` // html body
   });
   console.log("info: ", info)
   console.log("Message sent: %s", info.messageId);
